@@ -1,27 +1,9 @@
-# voez.sevenoutman.com
+# voez-plus
 
-> Voez leaderboard site.
+> VOEZ+ 网站前端项目
 
-## Build Setup
+## 关于 VOEZ+
 
-``` bash
-# install dependencies
-npm install
+VOEZ+ 是《兰空 VOEZ》游戏国服榜单网站，不是游戏开发及运营团队授权的官方站点。
 
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+![二维码](http://s.jiathis.com/qrcode.php?url=http://voez.sevenoutman.com/)
