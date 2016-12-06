@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <meta name="apple-mobile-web-app-title" content="VOEZ+">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- UC -->
+    <meta name="full-screen" content="yes">
+    <meta name="browsermode" content="application">
+    <!-- QQ -->
+    <meta name="x5-orientation" content="portrait">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="x5-page-mode" content="app">
+    <title>VOEZ+</title>
+    <link href="/assets/icon_57.png" rel="shortcut icon">
+    <link href="/assets/icon_152.png" sizes="152x152" rel="apple-touch-icon">
+    <link href="/assets/icon_144.png" sizes="144x144" rel="apple-touch-icon">
+    <link href="/assets/icon_120.png" sizes="120x120" rel="apple-touch-icon">
+    <link href="/assets/icon_114.png" sizes="114x114" rel="apple-touch-icon">
+    <link href="/assets/icon_76.png" sizes="76x76" rel="apple-touch-icon">
+    <link href="/assets/icon_72.png" sizes="72x72" rel="apple-touch-icon">
+    <link href="/assets/icon_57.png" sizes="57x57" rel="apple-touch-icon">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)"
+          href="/assets/startup.png"/>
+    <style>
+        .with-statusbar-overlay body {
+            padding-top: 20px;
+            box-sizing: border-box
+        }
+
+        .with-statusbar-overlay .statusbar-overlay {
+            display: block
+        }
+
+        .statusbar-overlay {
+            background: #35495e;
+            z-index: 10000;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 20px;
+            width: 100%;
+            display: none;
+            -webkit-transition-duration: .4s;
+            transition-duration: .4s;
+        }
+
+        .with-statusbar-overlay .startup {
+            top: -20px;
+        }
+
+        .startup {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10001;
+            background-color: #F9F9F9;
+        }
+
+        .startup > img {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            -webkit-transform: translate3d(0, -50%, 0);
+            transform: translate3d(0, -50%, 0);
+            vertical-align: bottom;
+            display: block;
+        }
+
+        .voez-startup-fade-transition {
+            -webkit-animation-duration: 600ms;
+            animation-duration: 600ms;
+
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .voez-startup-fade-leave {
+            -webkit-animation-name: voezStartupFadeout;
+            animation-name: voezStartupFadeout;
+        }
+
+        @-webkit-keyframes voezStartupFadeout {
+            from {
+                opacity: 1;
+                -webkit-transform: translate3d(0, 0, 0) scale(1);
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(0, 0, 0) scale(1.4);
+                transform: translate3d(0, 0, 0) scale(1.4);
+            }
+        }
+
+        @keyframes voezStartupFadeout {
+            from {
+                opacity: 1;
+                -webkit-transform: translate3d(0, 0, 0) scale(1);
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(0, 0, 0) scale(1.4);
+                transform: translate3d(0, 0, 0) scale(1.4);
+            }
+        }
+    </style>
+    <script>
+
+        function isWebApp() {
+            return !!window.navigator.standalone
+        }
+        window.startTime = Date.now()
+
+        if (isWebApp()) {
+            document.querySelector('html').classList.add('with-statusbar-overlay')
+        }
+    </script>
+</head>
+<body>
+<div class="statusbar-overlay"></div>
+<div class="startup voez-startup-fade-transition">
+    <img src="http://voez.sevenoutman.com/assets/startup-o.png">
+</div>
+<div id="app"></div>
+<!-- built files will be auto injected -->
+</body>
+</html>
