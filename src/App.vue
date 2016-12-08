@@ -347,11 +347,7 @@
         height: 100%;
         overflow-x: hidden;
         background-color: #fbf9fe;
-        -webkit-overflow-scrolling: touch;
-        -webkit-user-select: none;
-        -webkit-transform-style: preserve-3d;
-        -webkit-backface-visibility: hidden;
-        transform: translate3d(0, 0, 0);
+        /*-webkit-overflow-scrolling: touch;*/
     }
 
     span[id^=cnzz] {
@@ -364,17 +360,7 @@
 
     #app {
         height: 100%;
-        -webkit-transform-style: preserve-3d;
-
     }
-
-    .router-view {
-        min-height: 100%;
-        background-color: #fbf9fe;
-        -webkit-transform-style: preserve-3d;
-
-    }
-
     /* v-r-transition, default is {forward: 'forward', back: 'back'}*/
     .forward-enter, .forward-leave {
         transform: translate3d(-100%, 0, 0);
@@ -385,6 +371,7 @@
     }
 
     .view-box {
+        transform: translate3d(0, 0, 0);
 
         .vux-demo-header-box {
             z-index: 100;
@@ -395,6 +382,10 @@
             .vux-header-title, h1 {
                 margin-left: 88px;
             }
+        }
+
+        .router-view {
+            background-color: #fbf9fe;
         }
 
         .weui_tab_bd {
