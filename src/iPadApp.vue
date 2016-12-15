@@ -10,16 +10,30 @@
         <action-sheet :menus="actionSheet.menus" :show-cancel="actionSheet.showCancel" cancel-text="取消"
                       :show.sync="actionSheet.show"
                       v-ref:action-sheet></action-sheet>
-        <view-box class="view-box" v-ref:view-box>
-            <!--header slot-->
-            <div class="vux-demo-header-box" slot="header" v-if="isWebApp">
-                <x-header :left-options="leftOptions" :transition="headerTransition" :title="title"
-                          @on-click-title="scrollTop" @on-click-back="goBack"></x-header>
-            </div>
-            <!--default slot-->
-            <router-view class="router-view" v-ref:router-view
-                         :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')"></router-view>
-        </view-box>
+        <div class="master-detail-layout">
+            <view-box class="view-box master-box">
+                <!--header slot-->
+                <div class="vux-demo-header-box" slot="header" v-if="isWebApp">
+                    <x-header :left-options="{showBack: false}" title="VOEZ+"
+                              @on-click-title="scrollTop" @on-click-back="goBack"></x-header>
+                </div>
+                <!--default slot-->
+                <home></home>
+            </view-box>
+            <view-box class="view-box detail-box" v-ref:view-box>
+                <!--header slot-->
+                <div class="vux-demo-header-box" slot="header" v-if="isWebApp">
+                    <x-header :left-options="leftOptions" :transition="headerTransition" :title="title"
+                              @on-click-title="scrollTop" @on-click-back="goBack"></x-header>
+                    <!--<x-header :left-options="leftOptions" :title="title"-->
+                              <!--@on-click-title="scrollTop" @on-click-back="goBack"></x-header>-->
+                </div>
+                <!--default slot-->
+                <router-view class="router-view" v-ref:router-view
+                             :transition="'vux-pop-' + (direction === 'forward' ? 'in' : (direction === 'reverse' ? 'out' : ''))"></router-view>
+                <!--<router-view class="router-view" v-ref:router-view></router-view>-->
+            </view-box>
+        </div>
     </div>
 </template>
 <script>
@@ -29,6 +43,8 @@
     import Toast from 'vux/src/components/toast/index.vue'
     import Confirm from 'vux/src/components/confirm/index.vue'
     import ActionSheet from 'vux/src/components/actionsheet/index.vue'
+
+    import Home from './components/Home.vue'
 
     import XHeader from './components/common/x-header.vue'
     import ViewBox from 'vux/src/components/view-box/index.vue'
@@ -43,7 +59,8 @@
             Confirm,
             ActionSheet,
             ViewBox,
-            XHeader
+            XHeader,
+            Home
         },
         data() {
             return {
@@ -82,7 +99,8 @@
                 }
             },
             headerTransition () {
-                return this.direction === 'forward' ? 'vux-header-fade-in-right' : 'vux-header-fade-in-left'
+                return this.direction === 'forward' ? 'vux-header-fade-in-right' :
+                        (this.direction === 'reverse' ? 'vux-header-fade-in-left' : '')
             },
             title () {
                 if (this.route.title) {
@@ -350,6 +368,26 @@
         /*-webkit-overflow-scrolling: touch;*/
     }
 
+    body.ipad::before {
+        content: " ";
+        position: absolute;
+        left: 320px;
+        top: 0;
+        height: 100%;
+        width: 1px;
+        border-left: 1px solid #d9d9d9;
+        color: #d9d9d9;
+        -webkit-transform-origin: 0 0;
+        transform-origin: 0 0;
+        -webkit-transform: scaleX(0.5);
+        transform: scaleX(0.5);
+        z-index: 10001;
+    }
+
+    body.ipad.pro::before {
+        left: 375px;
+    }
+
     span[id^=cnzz] {
         display: none !important;
     }
@@ -371,31 +409,50 @@
         transform: translate3d(100%, 0, 0);
     }
 
-    .view-box {
-        transform: translate3d(0, 0, 0);
-        .vux-demo-header-box {
-            z-index: 100;
-            position: absolute;
-            width: 100%;
-            left: 0;
-            top: 0;
-            .vux-header-title, h1 {
-                margin-left: 88px;
+    .master-detail-layout {
+        display: flex;
+        height: 100%;
+        overflow-y: auto;
+
+        .view-box {
+            transform: translate3d(0, 0, 0);
+
+            &.master-box {
+                width: 320px;
+                background-color: #fbf9fe;
+                z-index: 2;
             }
+            &.detail-box {
+                flex-grow: 1;
+            }
+            .vux-demo-header-box {
+                z-index: 100;
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top: 0;
+                .vux-header-title, h1 {
+                    margin-left: 88px;
+                }
+            }
+
+            .router-view {
+                background-color: #fbf9fe;
+            }
+
+            .weui_tab_bd {
+                padding-bottom: 0;
+            }
+
+            [slot='header'] + .weui_tab_bd {
+                padding-top: 46px;
+            }
+
         }
 
-        .router-view {
-            background-color: #fbf9fe;
-        }
-
-        .weui_tab_bd {
-            padding-bottom: 0;
-        }
-
-        [slot='header'] + .weui_tab_bd {
-            padding-top: 46px;
-        }
-
+    }
+    .pro .master-detail-layout .view-box.master-box {
+        width: 375px;
     }
 
     /**

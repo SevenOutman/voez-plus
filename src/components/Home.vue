@@ -29,8 +29,8 @@
         </dialog>
         <announcement></announcement>
         <group>
-            <cell title="实时歌曲排行榜" link="songs"></cell>
-            <cell title="关注歌曲" link="favorite">{{ favoriteCount }}首</cell>
+            <cell title="实时歌曲排行榜" link="/songs"></cell>
+            <cell title="关注歌曲" link="/favorite">{{ favoriteCount }}首</cell>
             <cell title="我的 VOEZ+" :value="user.name || '邀请测试中'" is-link @click="goMy">
             </cell>
         </group>
@@ -65,7 +65,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     import Group from 'vux/src/components/group'
     import Cell from 'vux/src/components/cell/index.vue'
     import Announcement from './announcement/index.vue'
@@ -122,13 +122,13 @@
                                 this.$dispatch("sys:confirm", {
                                     text: '进入『我的 VOEZ+』将导致您正在游玩的《兰空VOEZ》下线。',
                                     onConfirm: () => {
-                                        this.$router.go('my')
+                                        this.$router.go('/my')
                                     }
                                 })
                             }
                         } else {
                             this.$dispatch("sys:toast", "登录已失效")
-                            this.$router.go('login')
+                            this.$router.go('/login')
                         }
                     })
                 }

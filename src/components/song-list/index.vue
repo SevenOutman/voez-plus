@@ -8,7 +8,7 @@
             <cell :title="song.name" is-link v-link="'leaderboard/' + song.id"
                   v-for="song of favoriteSongs | orderBy sortName"></cell>
         </group>
-        <group :title="'全部' + list.length + '首歌曲'">
+        <group :title="'全部 ' + list.length + ' 首歌曲'">
             <cell :title="song.name" is-link v-link="'leaderboard/' + song.id"
                   v-for="song of list | orderBy sortName"></cell>
         </group>
@@ -60,6 +60,18 @@
         .weui_cell {
             -webkit-transform: translate3d(0, 0, 0);
             -webkit-backface-visibility: hidden;
+        }
+    }
+    .detail-box {
+        .voez-song-list {
+            padding: 15px 30px 30px;
+            box-sizing: border-box;
+            .weui_cells {
+                border-radius: 5px;
+                &::before, &::after {
+                    display: none;
+                }
+            }
         }
     }
 </style>

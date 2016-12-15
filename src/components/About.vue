@@ -37,6 +37,7 @@
         box-sizing: border-box;
         padding: 10px 15px 30px;
         color: #000000;
+        background-color: #ffffff !important;
         h2 {
             font-size: 18px;
             text-align: center;
@@ -46,6 +47,11 @@
         p {
             margin-top: 1em;
             font-size: 14px;
+        }
+    }
+    .detail-box {
+        .vplus-about {
+            padding: 15px 30px 30px;
         }
     }
 </style>
