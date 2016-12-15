@@ -1,5 +1,9 @@
 <template>
     <div class="voez-leaderboard">
+        <div class="voez-leaderboard-song-info">
+            <p>{{ song.author }}</p>
+            <p>BPM {{ song.bpm }}</p>
+        </div>
         <div class="voez-leaderboard-song-cover" @click="toggleCoverBlur">
             <div class="vplus-leaderboard-song-cover-box" v-show="selfTop && cover.blur" transition="fade">
                 <blur :blur-amount="5" :url="coverSrc" :height="cover.height">
@@ -68,6 +72,9 @@
 
     const MODES = ['easy', 'hard', 'special'];
 
+
+    const iPad = /ipad/.test(window.navigator.userAgent.toLocaleLowerCase())
+    const pro  = iPad && document.body.clientWidth >= 1024 && document.body.clientHeight >= 1024
     export default {
         components: {
             Sticky,
@@ -96,7 +103,7 @@
                 },
                 displayMode:  'score',
                 cover:        {
-                    height: window.innerWidth * 0.5625,
+                    height: iPad ? ((window.innerWidth - (pro ? 375 : 320) - 60) / 2) : window.innerWidth * 0.5625,
                     blur:   true
                 }
             }
@@ -448,6 +455,40 @@
         .vux-tab-ink-bar-transition-backward {
             transition+_: right 0.3s cubic-bezier(0.35, 0, 0.25, 1) 0.09s, left 0.3s cubic-bezier(0.35, 0, 0.25, 1), background-color 300ms cubic-bezier(0.35, 0, 0.25, 1);
         }
+        .voez-leaderboard-song-info {
+            display: none;
+        }
+    }
 
+    .ipad .voez-leaderboard {
+        padding: 30px;
+        box-sizing: border-box;
+        position: relative;
+        .voez-leaderboard-song-cover {
+            width: 50%;
+            padding-top: 28.125%;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 10px 0 rgba(0, 0, 0, .6);
+            & + div {
+                margin-top: 15px;
+            }
+        }
+
+        .voez-leaderboard-song-info {
+            position: absolute;
+            top: 30px;
+            right: 0;
+            width: 50%;
+            padding: 0 30px 0 15px;
+            box-sizing: border-box;
+            display: block;
+        }
+        .weui_cells_title {
+            display: none;
+        }
+        .weui_cells::before, .weui_cells::after {
+            display: none;
+        }
     }
 </style>

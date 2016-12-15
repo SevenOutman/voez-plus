@@ -1,9 +1,15 @@
 <template>
-    <div></div>
+    <div class="vplus-dashboard">
+
+    </div>
 </template>
 <script>
     export default {
 
     }
 </script>
-<style></style>
+<style lang="less" rel="stylesheet/less">
+    .vplus-dashboard {
+
+    }
+</style>

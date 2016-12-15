@@ -62,6 +62,7 @@
             -webkit-backface-visibility: hidden;
         }
     }
+
     .detail-box {
         .voez-song-list {
             padding: 15px 30px 30px;

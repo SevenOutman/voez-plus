@@ -32,23 +32,14 @@ import Favorite from '../components/favorite/index.vue'
 import Leaderboard from '../components/leaderboard/index.vue'
 import Login from '../components/login/index.vue'
 router.map({
-    '/':                    {
-        component:  Dashboard,
-        routeIndex: 0,
-        title:      '首页'
-    },
     '/about':               {
         component:  About,
         routeIndex: 1,
-        backRoute:  '/',
-        backText:   '首页',
         title:      '关于'
     },
     '/songs':               {
         component:  SongList,
         routeIndex: 1,
-        backRoute:  '/',
-        backText:   '首页',
         title:      '歌曲列表'
     },
     '/leaderboard/:songId': {
@@ -63,15 +54,11 @@ router.map({
     '/favorite':            {
         component:  Favorite,
         routeIndex: 1,
-        backRoute:  '/',
-        backText:   '首页',
         title:      '关注歌曲'
     },
     '/login':               {
         component:  Login,
         routeIndex: 1,
-        backRoute:  '/',
-        backText:   '首页',
         title:      '登录'
     },
     '/my':                  {
@@ -105,6 +92,7 @@ router.alias({
 
 router.redirect({
     '*': '/',
+    '/': '/songs'
 })
 
 router.beforeEach(({from, to, next, abort, redirect}) => {

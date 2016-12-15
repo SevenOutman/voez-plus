@@ -90,7 +90,7 @@
                 })
             },
             submit(){
-                this.saveFavorite(this.selectedSongs).then(() => {
+                this.saveFavorite(this.selectedSongs.length ? this.selectedSongs : [0]).then(() => {
                     this.isEditing = false
                 })
             },
@@ -107,6 +107,9 @@
                         this.storeUpdateClientFavorite(res.info.favorite)
                         this.$dispatch("sys:loading.off")
                         this.$dispatch("sys:toast.success", "操作成功")
+                    } else {
+                        this.$dispatch("sys:loading.off")
+                        this.$dispatch("sys:toast.cancel", "操作失败")
                     }
                 })
             },

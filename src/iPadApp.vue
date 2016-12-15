@@ -1,8 +1,5 @@
 <template>
     <div>
-        <loading :show="routerLoading" text="加载中"></loading>
-        <loading :show="loading.show" :text="loading.text"></loading>
-        <toast :show.sync="toast.show" :type="toast.type">{{ toast.text }}</toast>
         <confirm :show.sync="confirm.show" title="提示" confirm-text="确定"
                  cancel-text="取消" @on-confirm="confirm.onConfirm" @on-cancel="confirm.onCancel">
             <p>{{ confirm.text }}</p>
@@ -21,6 +18,9 @@
                 <home></home>
             </view-box>
             <view-box class="view-box detail-box" v-ref:view-box>
+                <loading :show="routerLoading" text="加载中"></loading>
+                <loading :show="loading.show" :text="loading.text"></loading>
+                <toast :show.sync="toast.show" :type="toast.type">{{ toast.text }}</toast>
                 <!--header slot-->
                 <div class="vux-demo-header-box" slot="header" v-if="isWebApp">
                     <x-header :left-options="leftOptions" :transition="headerTransition" :title="title"
@@ -94,7 +94,7 @@
             leftOptions () {
                 return {
                     backText:      this.route.backText,
-                    showBack:      this.route.path !== '/',
+                    showBack:      this.route.routeIndex > 1,
                     preventGoBack: true
                 }
             },

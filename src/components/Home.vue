@@ -35,7 +35,7 @@
             </cell>
         </group>
         <group>
-            <cell title="关于" link="about">
+            <cell title="关于" link="/about">
                 <span slot="after-title" class="vux-reddot-s" v-if="hasNewAbout"></span>
                 <span slot="value" v-if="hasNewAbout">有更新</span>
             </cell>
