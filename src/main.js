@@ -56,13 +56,15 @@ const iPad = /ipad/.test(window.navigator.userAgent.toLocaleLowerCase())
 const pro  = iPad && document.body.clientWidth >= 1024 && document.body.clientHeight >= 1024
 
 let router
-if (iPad) {
+if (isWebApp() && iPad) {
+    console.log('iPad WebApp')
     router = require('./helpers/router-ipad').default
     document.body.classList.add('ipad')
     if (pro) {
         document.body.classList.add('pro')
     }
 } else {
+    console.log('Not iPad WebApp')
     router = require('./helpers/router').default
 }
 
@@ -81,7 +83,7 @@ if (window.navigator.standalone === true) {
 }
 import iPadApp from './iPadApp'
 import App from './App'
-router.start(iPad ? iPadApp : App, '#app')
+router.start((isWebApp() && iPad) ? iPadApp : App, '#app')
 
 var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
 document.write(unescape("%3Cspan id='cnzz_stat_icon_1260437888'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260437888' type='text/javascript'%3E%3C/script%3E"));

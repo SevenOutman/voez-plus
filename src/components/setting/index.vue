@@ -80,4 +80,17 @@
     .vplus-setting {
         overflow: hidden;
     }
+
+    .detail-box {
+        .vplus-setting {
+            padding: 15px 30px 30px;
+            box-sizing: border-box;
+            .weui_cells {
+                border-radius: 5px;
+                &::before, &::after {
+                    display: none;
+                }
+            }
+        }
+    }
 </style>

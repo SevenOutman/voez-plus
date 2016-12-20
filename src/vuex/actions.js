@@ -7,6 +7,11 @@ export default {
         dispatch("UPDATE_SONGS", songs)
     },
     storeUpdateAnnouncements({dispatch}, announcements) {
+        if (!announcements || !announcements.length) {
+            announcements = [{
+                content: '暂无公告。'
+            }]
+        }
         dispatch('UPDATE_ANNOUNCEMENTS', announcements)
     },
     storeUpdateLoginStatus({dispatch}, status) {

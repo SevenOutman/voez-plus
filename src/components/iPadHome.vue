@@ -1,32 +1,7 @@
 <template>
     <div class="voez-home">
-        <confirm :show.sync="showLoginConfirm" title="提示" confirm-text="确定"
-                 cancel-text="取消" @on-confirm="$router.go('login')">
-            <p>您即将使用《兰空VOEZ》游戏账号和密码登录『我的 VOEZ+』测试版，本站不是官方授权的站点，登录即代表您已知晓并同意以下条款。</p>
-            <p>1. 本站将会记录、存储您的 VOEZ 账号和密码。</p>
-            <p>2. 本站不会冒用您的信息，不会使用您的 VOEZ 账号和密码进行除您在本站手动操作范围以外的任何活动。</p>
-            <p>3. 登录将会占用您 VOEZ 账号的绑定设备数。</p>
-            <p>4. 您知晓以下风险并将自行承担可能带来的后果：</p>
-            <p>本站遭到第三方攻击而造成您的 VOEZ 账号和密码泄露。</p>
-            <p>VOEZ 官方的接口改变而导致本站部分或全部功能无法继续使用。</p>
-        </confirm>
-        <confirm :show.sync="showReloginConfirm" title="提示" confirm-text="确定"
-                 cancel-text="取消" @on-confirm="$router.go('my')">
-            <p>进入『我的 VOEZ+』将导致您正在游玩的《兰空VOEZ》下线。</p>
-        </confirm>
-        <dialog class="vplus-welcome-dialog" :scroll="false" :show="showWelcomeDialog">
-            <p>欢迎使用 VOEZ+</p>
-            <div class="img-box">
-                <img src="http://voez.sevenoutman.com/assets/azami.jpg" alt="薊">
-            </div>
-            <div class="vplus-welcome-dialog-content">
-                <p>好久不见，我是薊。</p>
-                <p>欢迎来玩。记得阅读『关于』。</p>
-                <p>&nbsp;</p>
-                <p>薊 2016.9</p>
-            </div>
-            <span class="vux-close" style="margin: 8px auto" @click="showWelcomeDialog = false"></span>
-        </dialog>
+
+
         <announcement></announcement>
         <group>
             <cell title="实时歌曲排行榜" link="/songs"></cell>
@@ -39,7 +14,7 @@
                 <span slot="after-title" class="vux-reddot-s" v-if="hasNewAbout"></span>
                 <span slot="value" v-if="hasNewAbout">有更新</span>
             </cell>
-            <cell title="和薊合影" is-link @click="showWelcomeDialog = true"></cell>
+            <cell title="和薊合影" is-link @click="$dispatch('home:welcome')"></cell>
             <cell title="添加到主屏幕" v-if="!isWebApp">
                 <span slot="after-title" class="vux-reddot-s" v-if="isIOS"></span>
                 <div slot="value">
@@ -47,7 +22,7 @@
                     <template v-else>
                         <span v-if="!isSafari" style="color: green">在 Safari 中打开</span>
                         <span v-else style="display: inline-block; color: green">
-                            点击{{ isIPad ? '右上' : '下' }}方的
+                            点击下方的
                             <?xml version="1.0" standalone="no"?>
                             <svg style="display: inline-block; vertical-align: middle; margin: -4px 0 0 -4px" width="20"
                                  viewBox="0 0 1024 1024" version="1.1"
@@ -100,9 +75,6 @@
             isSafari() {
                 return /safari/.test(this.ua)
             },
-            isIPad() {
-                return /(iPad).*OS\s([\d_]+)/i.test(this.ua)
-            },
             isWebApp() {
                 return isWebApp()
             }
@@ -112,6 +84,7 @@
                 if (!this.hasVplusUser) {
                     // 从未登录过, 显示登录提示
                     this.showLoginConfirm = true
+                    this.$dispatch('home:login-confirm')
                 } else {
                     // 已经登录过, 准备进入我的VOEZ+
                     this.$http.get('account/prelogin').then(response => {
@@ -119,11 +92,11 @@
                         if (res.result && res.code == 0) {
                             if (!res.info.need_login_confirm) {
                                 // 无需登录提醒
-                                this.$router.go('my')
+                                this.$router.go('/my')
                             } else {
 //                                this.showReloginConfirm = true
                                 this.$dispatch("sys:confirm", {
-                                    text: '进入『我的 VOEZ+』将导致您正在游玩的《兰空VOEZ》下线。',
+                                    text:      '进入『我的 VOEZ+』将导致您正在游玩的《兰空VOEZ》下线。',
                                     onConfirm: () => {
                                         this.$router.go('/my')
                                     }

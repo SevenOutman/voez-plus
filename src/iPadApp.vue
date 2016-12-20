@@ -1,12 +1,9 @@
 <template>
     <div>
-        <confirm :show.sync="confirm.show" title="提示" confirm-text="确定"
-                 cancel-text="取消" @on-confirm="confirm.onConfirm" @on-cancel="confirm.onCancel">
-            <p>{{ confirm.text }}</p>
-        </confirm>
-        <action-sheet :menus="actionSheet.menus" :show-cancel="actionSheet.showCancel" cancel-text="取消"
-                      :show.sync="actionSheet.show"
-                      v-ref:action-sheet></action-sheet>
+        <dialog class="vplus-login-dialog" :scroll="false" :show.sync="showLoginDialog"
+                dialog-transition="vplus-login-dialog" hide-on-blur>
+            <login></login>
+        </dialog>
         <div class="master-detail-layout">
             <view-box class="view-box master-box">
                 <!--header slot-->
@@ -18,15 +15,49 @@
                 <home></home>
             </view-box>
             <view-box class="view-box detail-box" v-ref:view-box>
+                <action-sheet :menus="actionSheet.menus" :show-cancel="actionSheet.showCancel" cancel-text="取消"
+                              :show.sync="actionSheet.show"
+                              v-ref:action-sheet></action-sheet>
                 <loading :show="routerLoading" text="加载中"></loading>
                 <loading :show="loading.show" :text="loading.text"></loading>
                 <toast :show.sync="toast.show" :type="toast.type">{{ toast.text }}</toast>
+                <confirm :show.sync="showLoginConfirm" title="提示" confirm-text="确定"
+                         cancel-text="取消" @on-confirm="goLogin">
+                    <p>您即将使用《兰空VOEZ》游戏账号和密码登录『我的 VOEZ+』测试版，本站不是官方授权的站点，登录即代表您已知晓并同意以下条款。</p>
+                    <p>1. 本站将会记录、存储您的 VOEZ 账号和密码。</p>
+                    <p>2. 本站不会冒用您的信息，不会使用您的 VOEZ 账号和密码进行除您在本站手动操作范围以外的任何活动。</p>
+                    <p>3. 登录将会占用您 VOEZ 账号的绑定设备数。</p>
+                    <p>4. 您知晓以下风险并将自行承担可能带来的后果：</p>
+                    <p>本站遭到第三方攻击而造成您的 VOEZ 账号和密码泄露。</p>
+                    <p>VOEZ 官方的接口改变而导致本站部分或全部功能无法继续使用。</p>
+                </confirm>
+                <confirm :show.sync="confirm.show" title="提示" confirm-text="确定"
+                         cancel-text="取消" @on-confirm="confirm.onConfirm" @on-cancel="confirm.onCancel">
+                    <p>{{ confirm.text }}</p>
+                </confirm>
+                <confirm :show.sync="showReloginConfirm" title="提示" confirm-text="确定"
+                         cancel-text="取消" @on-confirm="$router.go('my')">
+                    <p>进入『我的 VOEZ+』将导致您正在游玩的《兰空VOEZ》下线。</p>
+                </confirm>
+                <dialog class="vplus-welcome-dialog" :scroll="false" :show="showWelcomeDialog">
+                    <p>欢迎使用 VOEZ+</p>
+                    <div class="img-box">
+                        <img src="http://voez.sevenoutman.com/assets/azami.jpg" alt="薊">
+                    </div>
+                    <div class="vplus-welcome-dialog-content">
+                        <p>好久不见，我是薊。</p>
+                        <p>欢迎来玩。记得阅读『关于』。</p>
+                        <p>&nbsp;</p>
+                        <p>薊 2016.9</p>
+                    </div>
+                    <span class="vux-close" style="margin: 8px auto" @click="showWelcomeDialog = false"></span>
+                </dialog>
                 <!--header slot-->
                 <div class="vux-demo-header-box" slot="header" v-if="isWebApp">
                     <x-header :left-options="leftOptions" :transition="headerTransition" :title="title"
                               @on-click-title="scrollTop" @on-click-back="goBack"></x-header>
                     <!--<x-header :left-options="leftOptions" :title="title"-->
-                              <!--@on-click-title="scrollTop" @on-click-back="goBack"></x-header>-->
+                    <!--@on-click-title="scrollTop" @on-click-back="goBack"></x-header>-->
                 </div>
                 <!--default slot-->
                 <router-view class="router-view" v-ref:router-view
@@ -42,9 +73,11 @@
     import Loading from 'vux/src/components/loading/index.vue'
     import Toast from 'vux/src/components/toast/index.vue'
     import Confirm from 'vux/src/components/confirm/index.vue'
+    import Dialog from 'vux/src/components/dialog/index.vue'
     import ActionSheet from 'vux/src/components/actionsheet/index.vue'
 
-    import Home from './components/Home.vue'
+    import Home from './components/iPadHome.vue'
+    import Login from './components/login/index-ipad.vue'
 
     import XHeader from './components/common/x-header.vue'
     import ViewBox from 'vux/src/components/view-box/index.vue'
@@ -57,37 +90,43 @@
             Loading,
             Toast,
             Confirm,
+            Dialog,
             ActionSheet,
             ViewBox,
             XHeader,
-            Home
+            Home,
+            Login
         },
         data() {
             return {
-                showStartup: false,
-                isWebApp:    isWebApp(),
-                actionSheet: {
+                showStartup:        false,
+                isWebApp:           isWebApp(),
+                actionSheet:        {
                     show:       false,
                     menus:      {},
                     showCancel: true
                 },
-                loading:     {
+                loading:            {
                     show: false,
                     text: '加载中'
                 },
-                toast:       {
+                toast:              {
                     show: false,
                     type: 'text',
                     text: ''
                 },
-                confirm:     {
+                confirm:            {
                     show:      false,
                     text:      '',
                     onConfirm: () => {
                     },
                     onCancel:  () => {
                     }
-                }
+                },
+                showLoginDialog:    false,
+                showLoginConfirm:   false,
+                showReloginConfirm: false,
+                showWelcomeDialog:  false
             }
         },
         computed:   {
@@ -195,6 +234,14 @@
             updateSongs(songs) {
                 this.storeUpdateSongs(songs)
                 localStorage.setItem('songs', JSON.stringify(songs))
+            },
+            goLogin() {
+                this.showLoginConfirm  = false
+                this.showWelcomeDialog = false
+                this.confirm.show      = false
+                this.actionSheet.show  = false
+
+                this.showLoginDialog = true
             }
         },
         store:      vuexStore,
@@ -220,6 +267,11 @@
                 this.actionSheet.showCancel = options.showCancel
                 this.$nextTick(() => {
                     this.actionSheet.show = true
+
+                    this.confirm.show      = false
+                    this.showLoginConfirm  = false
+                    this.showLoginDialog   = false
+                    this.showWelcomeDialog = false
                 })
             },
             "sys:loading.on" (text) {
@@ -255,6 +307,35 @@
                 this.confirm.onCancel  = options.onCancel || noop
                 this.confirm.show      = true
 
+                this.actionSheet.show  = false
+                this.showLoginConfirm  = false
+                this.showLoginDialog   = false
+                this.showWelcomeDialog = false
+            },
+            "sys:login" () {
+                this.goLogin()
+            },
+            "login:success" () {
+                this.$router.go('/my')
+                setTimeout(() => {
+                    this.showLoginDialog = false
+                }, 1000)
+            },
+            'home:login-confirm'() {
+                this.showWelcomeDialog = false
+                this.showLoginDialog   = false
+                this.confirm.show      = false
+                this.actionSheet.show  = false
+
+                this.showLoginConfirm = true
+            },
+            'home:welcome'() {
+                this.showLoginDialog  = false
+                this.showLoginConfirm = false
+                this.confirm.show     = false
+                this.actionSheet.show = false
+
+                this.showWelcomeDialog = true
             }
         },
         watch:      {
@@ -343,7 +424,7 @@
                     }
                 }
             }
-            document.addEventListener('touchstart', e => {
+            this.$refs.viewBox.$el.addEventListener('touchstart', e => {
                 if (e.touches.length == 1) {
                     let touch  = e.touches[0]
                     touchStart = {
@@ -354,6 +435,13 @@
                     document.addEventListener('touchmove', ifSwipeRight, false)
                 }
             }, false)
+
+            this.$router.beforeEach(() => {
+                this.showLoginConfirm  = false
+                this.showWelcomeDialog = false
+                this.confirm.show      = false
+                this.actionSheet.show  = false
+            })
         }
     }
 </script>
@@ -365,6 +453,13 @@
         height: 100%;
         overflow-x: hidden;
         background-color: #fbf9fe;
+        moz-user-select: -moz-none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         /*-webkit-overflow-scrolling: touch;*/
     }
 
@@ -415,6 +510,7 @@
         overflow-y: auto;
 
         .view-box {
+            height: 100%;
             transform: translate3d(0, 0, 0);
 
             &.master-box {
@@ -424,6 +520,13 @@
             }
             &.detail-box {
                 flex-grow: 1;
+                .weui_dialog {
+                    width: auto !important;
+                    box-shadow: 0 1px 20px 0 rgba(0, 0, 0, .2);
+                }
+                .weui_mask, .weui_fade_toggle {
+                    background-color: rgba(0, 0, 0, .2);
+                }
             }
             .vux-demo-header-box {
                 z-index: 100;
@@ -449,8 +552,64 @@
             }
 
         }
-
     }
+
+    .vplus-login-dialog {
+        .weui_dialog {
+            width: 400px;
+            border-radius: 5px;
+            padding-bottom: 15px;
+            z-index: 10003;
+        }
+        .weui_mask {
+            z-index: 10002;
+        }
+        .vplus-login-dialog-transition {
+            -webkit-transition-duration: .4s;
+            transition-duration: .4s;
+            -webkit-transform: translate3d(-50%, -50%, 0) !important;
+            transform: translate3d(-50%, -50%, 0) !important;
+            -webkit-transition-property: opacity, -webkit-transform !important;
+            transition-property: opacity, -webkit-transform !important;
+            transition-property: transform, opacity !important;
+            transition-property: transform, opacity, -webkit-transform !important;
+        }
+
+        .vplus-login-dialog-enter {
+            transform: translate3d(-50%, 150%, 0) !important;
+        }
+
+        .vplus-login-dialog-leave {
+            transform: translate3d(-50%, 150%, 0) !important;
+        }
+    }
+
+    .vplus-welcome-dialog {
+        .weui_dialog {
+            width: 272px;
+        }
+        p {
+            color: #666666;
+            line-height: 40px;
+        }
+        .img-box {
+            height: 118px;
+            overflow: hidden;
+            & > img {
+                max-width: 100%;
+                margin-top: -143px;
+                display: block;
+            }
+        }
+        .vplus-welcome-dialog-content {
+
+            height: 150px;
+            padding: 10px 15px;
+            text-align: start;
+
+        }
+    }
+
     .pro .master-detail-layout .view-box.master-box {
         width: 375px;
     }
@@ -529,4 +688,5 @@
             transform: translate3d(100%, 0, 0);
         }
     }
+
 </style>

@@ -56,20 +56,13 @@ router.map({
         routeIndex: 1,
         title:      '关注歌曲'
     },
-    '/login':               {
-        component:  Login,
-        routeIndex: 1,
-        title:      '登录'
-    },
     '/my':                  {
         component(resolve) {
             store.dispatch('UPDATE_ROUTER_LOADING', true)
             require(['../components/my/index.vue'], resolve)
         },
-        routeIndex: 2,
-        backRoute:  '/',
+        routeIndex: 1,
         title:      '我的 VOEZ+',
-        backText:   '首页',
         auth:       true
     },
     '/setting':             {
@@ -77,7 +70,7 @@ router.map({
             store.dispatch('UPDATE_ROUTER_LOADING', true)
             require(['../components/setting/index.vue'], resolve)
         },
-        routeIndex: 3,
+        routeIndex: 2,
         backRoute:  '/my',
         title:      '设置',
         backText:   '我的 VOEZ+',

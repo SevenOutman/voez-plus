@@ -1,6 +1,9 @@
 <template>
     <div class="vplus-about">
         <article>
+            <h2>更新</h2>
+            <p>12/21 新增了专为 iPad 适配的界面。iPad 用户请将本站添加到主屏幕即可体验。</p>
+
             <h2>关于 VOEZ+</h2>
             <p>VOEZ+ （下称『本站』）由薊开发建设，不是《兰空VOEZ》游戏的开发及运营团队所授权的官方站点。</p>
             <p>浏览器的隐私模式/无痕模式可能影响本站部分功能的正常使用。</p>
@@ -51,6 +54,7 @@
     }
     .detail-box {
         .vplus-about {
+            box-sizing: border-box;
             padding: 15px 30px 30px;
         }
     }
