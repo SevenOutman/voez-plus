@@ -24,6 +24,12 @@
             Cell
         },
         route:      {
+            activate({next}) {
+                if (this.newSongs.length) {
+                    localStorage.setItem('lastnewsong', this.newSongs[0].id)
+                }
+                next()
+            },
             data({next}) {
                 next()
             }

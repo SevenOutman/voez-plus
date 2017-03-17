@@ -22,7 +22,7 @@
         </view-box>
     </div>
 </template>
-<script>
+<script type="text/babel">
     import vuexStore from './vuex/store'
     import vuexActions from './vuex/actions'
     import Loading from 'vux/src/components/loading/index.vue'
@@ -273,6 +273,8 @@
                     this.storeUpdateAnnouncements(res.info.announcement)
                     this.hideStartupView()
                 }
+            }).catch(err => {
+                alert('VOEZ+ 遇到问题正在维护，请稍后再试')
             })
             this.autoLogin(() => {
             })

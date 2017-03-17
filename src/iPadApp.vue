@@ -372,6 +372,8 @@
                     this.storeUpdateAnnouncements(res.info.announcement)
                     this.hideStartupView()
                 }
+            }).catch(err => {
+                alert('VOEZ+ 遇到问题正在维护，请稍后再试')
             })
             this.autoLogin(() => {
             })

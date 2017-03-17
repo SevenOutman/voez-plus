@@ -4,7 +4,10 @@
 
         <announcement></announcement>
         <group>
-            <cell title="实时歌曲排行榜" link="/songs"></cell>
+            <cell title="实时歌曲排行榜" link="/songs">
+                <span slot="after-title" class="vux-reddot-s" v-if="hasNewSong"></span>
+                <span slot="value" v-if="hasNewSong">有新歌</span>
+            </cell>
             <cell title="关注歌曲" link="/favorite">{{ favoriteCount }}首</cell>
             <cell title="我的 VOEZ+" :value="user.name || '邀请测试中'" is-link @click="goMy">
             </cell>
@@ -77,6 +80,12 @@
             },
             isWebApp() {
                 return isWebApp()
+            },
+            hasNewSong() {
+                if (!this.newSongs.length) return false
+
+                let lastNewSong = localStorage.getItem('lastnewsong')
+                return this.newSongs.filter(song => song.id == lastNewSong).length <= 0
             }
         },
         methods:    {
@@ -121,7 +130,8 @@
                 isLoading:     state => state.isLoading,
                 user:          state => state.user,
                 hasVplusUser:  state => !!state.user.id,
-                favoriteCount: state => state.clientFavorite.length
+                favoriteCount: state => state.clientFavorite.length,
+                newSongs: state => state.songList.filter(song => song.recent * 1)
             }
         },
         route:      {

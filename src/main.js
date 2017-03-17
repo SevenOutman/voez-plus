@@ -10,7 +10,7 @@ Vue.use(VueTouch)
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.http.options.emulateJSON = true
-Vue.http.options.root        = /voez/.test(location.host) ? location.protocol + '//' + location.host : 'http://dev.voez.sevenoutman.com'
+Vue.http.options.root        = /voez/.test(location.host) ? location.protocol + '//' + location.host : 'http://voez.sevenoutman.com'
 
 
 function isLocalStorageSupported() {
