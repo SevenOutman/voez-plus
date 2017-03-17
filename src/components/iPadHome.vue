@@ -85,6 +85,8 @@
                 if (!this.newSongs.length) return false
 
                 let lastNewSong = localStorage.getItem('lastnewsong')
+                if (!lastNewSong) return false
+
                 return this.newSongs.filter(song => song.id == lastNewSong).length <= 0
             }
         },
