@@ -52,16 +52,21 @@
             <span v-else style="display: inline-block; color: green">
                             点击{{ isIPad ? '右上' : '下' }}方的
               <?xml version="1.0" standalone="no"?>
-              <svg style="display: inline-block; vertical-align: middle; margin: -4px 0 0 -4px" width="20"
-                   viewBox="0 0 1024 1024" version="1.1"
-                   xmlns="http://www.w3.org/2000/svg">
-                            <g transform="translate(0, 825.0) scale(1, -1)">
-                                <path
-                                  d="M896 492.512l-191.488 0 0-64.512 128 0 0-512-640 0 0 512 128 0 0 64.512-192.512 0 0-641.024 768 0 0 641.024zM480.256 694.24l0-585.728 63.488 0 0 585.728 117.76-114.688 43.008 40.96-192.512 191.488-191.488-191.488 41.984-41.984 117.76 115.712z"
-                                  fill="green"></path>
-                            </g>
-                        </svg>
-                        </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                width="20"
+                viewBox="0 0 1024 1024"
+                style="display: inline-block; vertical-align: middle; margin: -4px 0 0 -4px"
+              >
+                <g transform="translate(0, 825.0) scale(1, -1)">
+                  <path
+                    d="M896 492.512l-191.488 0 0-64.512 128 0 0-512-640 0 0 512 128 0 0 64.512-192.512 0 0-641.024 768 0 0 641.024zM480.256 694.24l0-585.728 63.488 0 0 585.728 117.76-114.688 43.008 40.96-192.512 191.488-191.488-191.488 41.984-41.984 117.76 115.712z"
+                    fill="green"
+                  ></path>
+                </g>
+              </svg>
+            </span>
           </template>
         </div>
       </cell>
@@ -71,7 +76,7 @@
 
 <script type="text/babel">
   /* eslint-disable no-undef */
-
+  import {mapGetters} from 'vuex'
   import Announcement from './announcement/index.vue'
 
   import {Group, Cell, XDialog as Dialog, Confirm} from 'vux'
@@ -117,7 +122,14 @@
         if (!lastNewSong) return false
 
         return this.newSongs.filter(song => song.id === lastNewSong).length <= 0
-      }
+      },
+      ...mapGetters([
+        'isLoading',
+        'user',
+        'hasVplusUser',
+        'favoriteCount',
+        'newSongs'
+      ])
     },
     methods: {
       goMy () {
@@ -153,15 +165,6 @@
     events: {
       'sys:dialog.welcome' () {
         this.showWelcomeDialog = true
-      }
-    },
-    vuex: {
-      getters: {
-        isLoading: state => state.isLoading,
-        user: state => state.user,
-        hasVplusUser: state => !!state.user.id,
-        favoriteCount: state => state.clientFavorite.length,
-        newSongs: state => state.songList.filter(song => song.recent * 1)
       }
     },
     route: {

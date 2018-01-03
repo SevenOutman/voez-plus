@@ -7,34 +7,36 @@
              cancel-text="取消" @on-confirm="confirm.onConfirm" @on-cancel="confirm.onCancel">
       <p>{{ confirm.text }}</p>
     </confirm>
-    <action-sheet :menus="actionSheet.menus" :show-cancel="actionSheet.showCancel" cancel-text="取消"
-                  :show.sync="actionSheet.show"
-                  v-ref:action-sheet></action-sheet>
-    <view-box class="view-box" v-ref:view-box>
+    <action-sheet
+      :menus="actionSheet.menus"
+      :show-cancel="actionSheet.showCancel"
+      cancel-text="取消"
+      :show.sync="actionSheet.show"
+      ref="action-sheet"
+    ></action-sheet>
+    <view-box class="view-box" ref="view-box">
       <!--header slot-->
       <div class="vux-demo-header-box" slot="header" v-if="isWebApp">
         <x-header :left-options="leftOptions" :transition="headerTransition" :title="title"
                   @on-click-title="scrollTop" @on-click-back="goBack"></x-header>
       </div>
       <!--default slot-->
-      <router-view class="router-view" v-ref:router-view
-                   :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')"></router-view>
+      <router-view
+        ref="router-view"
+        class="router-view"
+        :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')"
+      ></router-view>
     </view-box>
   </div>
 </template>
 <script type="text/babel">
   /* eslint-disable no-undef */
 
+  import {mapActions, mapGetters} from 'vuex'
   import {axios} from './helpers/request'
-  import vuexStore from './vuex/store'
-  import vuexActions from './vuex/actions'
-  import Loading from 'vux/src/components/loading/index.vue'
-  import Toast from 'vux/src/components/toast/index.vue'
-  import Confirm from 'vux/src/components/confirm/index.vue'
-  import ActionSheet from 'vux/src/components/actionsheet/index.vue'
+  import {Loading, Toast, Confirm, Actionsheet as ActionSheet, ViewBox} from 'vux'
 
   import XHeader from './components/common/x-header.vue'
-  import ViewBox from 'vux/src/components/view-box/index.vue'
 
   import noop from './helpers/noop'
   import {getItem} from './helpers/storage'
@@ -79,8 +81,8 @@
     computed: {
       leftOptions () {
         return {
-          backText: this.route.backText,
-          showBack: this.route.path !== '/',
+          backText: this.$route.backText,
+          showBack: this.$route.path !== '/',
           preventGoBack: true
         }
       },
@@ -88,22 +90,29 @@
         return this.direction === 'forward' ? 'vux-header-fade-in-right' : 'vux-header-fade-in-left'
       },
       title () {
-        if (this.route.title) {
-          if (this.route.title instanceof Function) {
-            return this.route.title(this.$refs.routerView)
+        if (this.$route.title) {
+          if (this.$route.title instanceof Function) {
+            return this.$route.title(this.$refs.routerView)
           }
-          return this.route.title
+          return this.$route.title
         }
         return 'VOEZ+'
-      }
+      },
+      ...mapGetters([
+        'loginStatus',
+        'routerLoading',
+        'direction',
+        'setting',
+        'clientId'
+      ])
     },
     methods: {
       scrollTop () {
         this.$refs.viewBox.$els.viewBoxBody.scrollTop = 0
       },
       goBack () {
-        if (this.route.routeIndex > 0) {
-          this.$router.go(this.route.backRoute)
+        if (this.$route.meta.routeIndex > 0) {
+          this.$router.push(this.$route.meta.backRoute)
         }
       },
       hideStartupView () {
@@ -141,7 +150,7 @@
             startup.className = startup.className + ' voez-startup-fade-leave'
           }
 
-          if (this.route.path === '/') {
+          if (this.$route.path === '/') {
             let lastvisit = localStorage.getItem('lastvisit') * 1 || 0
             if (!lastvisit) {
               localStorage.setItem('lastvisit', Date.now())
@@ -179,19 +188,14 @@
       updateSongs (songs) {
         this.storeUpdateSongs(songs)
         localStorage.setItem('songs', JSON.stringify(songs))
-      }
-    },
-    store: vuexStore,
-    vuex: {
-      getters: {
-        loginStatus: state => state.loginStatus,
-        route: state => state.route,
-        routerLoading: state => state.routerLoading,
-        direction: state => state.direction,
-        setting: state => state.setting,
-        clientId: state => state.clientId
       },
-      actions: vuexActions
+      ...mapActions([
+        'storeUpdateSongs',
+        'storeUpdateUsers',
+        'storeUpdateSetting',
+        'storeUpdateClient',
+        'storeUpdateAnnouncements'
+      ])
     },
     events: {
       'sys:actionsheet' (options) {
@@ -249,7 +253,7 @@
         }
       }
     },
-    created () {
+    beforeMount () {
       this.storeUpdateSongs(JSON.parse(getItem('songs')) || [])
 
       axios.post('client/autologin', {
@@ -274,7 +278,8 @@
           this.storeUpdateAnnouncements(res.info.announcement)
           this.hideStartupView()
         }
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         alert('VOEZ+ 遇到问题正在维护，请稍后再试')
       })
       this.autoLogin(() => {
@@ -283,7 +288,7 @@
       preload.src = 'http://voez.sevenoutman.com/voez/cover/default/750'
 
       if (!isWebApp()) {
-        this.$watch('title', val => {
+        this.$watch('title', function (val) {
           document.title = val
           const ua = navigator.userAgent.toLowerCase()
           if (ua.indexOf('iphone') > -1 &&
@@ -304,7 +309,7 @@
         })
       }
     },
-    ready () {
+    mounted () {
       let touchStart = null
 
       const TRIGGER_SLOPE = 0.2

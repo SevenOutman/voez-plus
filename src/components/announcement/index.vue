@@ -3,7 +3,7 @@
     <div class="swiper-container">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="news of list">
-          <div class="voez-announcement-news" v-html="news.content | lineToP">
+          <div class="voez-announcement-news" v-html="lineToP(news.content)">
           </div>
         </div>
       </div>
@@ -13,6 +13,7 @@
 </template>
 <script>
   import Swiper from 'swiper'
+  import {mapGetters} from 'vuex'
 
   export default {
     data () {
@@ -20,18 +21,16 @@
         swiper: null
       }
     },
-    vuex: {
-      getters: {
-        list: state => state.announcements
-      }
+    computed: {
+      ...mapGetters({
+        list: 'announcements'
+      })
     },
-    filters: {
+    methods: {
       lineToP (content) {
         let ps = content.split('\\n')
         return ps.map(line => `<p>${line}</p>`).join('')
-      }
-    },
-    methods: {
+      },
       initSwiper () {
         this.swiper = new Swiper('.swiper-container', {
           direction: 'horizontal',

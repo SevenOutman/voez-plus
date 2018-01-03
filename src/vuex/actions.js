@@ -3,28 +3,28 @@
  */
 
 export default {
-  storeUpdateSongs: ({dispatch}, songs) => {
-    dispatch('UPDATE_SONGS', songs)
+  storeUpdateSongs: ({commit}, songs) => {
+    commit('UPDATE_SONGS', songs)
   },
-  storeUpdateAnnouncements ({dispatch}, announcements) {
+  storeUpdateAnnouncements ({commit}, announcements) {
     if (!announcements || !announcements.length) {
       announcements = [{
         content: '暂无公告。'
       }]
     }
-    dispatch('UPDATE_ANNOUNCEMENTS', announcements)
+    commit('UPDATE_ANNOUNCEMENTS', announcements)
   },
-  storeUpdateLoginStatus ({dispatch}, status) {
-    dispatch('UPDATE_LOGIN_STATUS', status)
+  storeUpdateLoginStatus ({commit}, status) {
+    commit('UPDATE_LOGIN_STATUS', status)
   },
-  storeUpdateUser ({dispatch}, user) {
-    dispatch('UPDATE_USER', user)
+  storeUpdateUser ({commit}, user) {
+    commit('UPDATE_USER', user)
   },
-  storeUpdateSetting ({dispatch}, setting) {
-    dispatch('UPDATE_SETTING', setting)
+  storeUpdateSetting ({commit}, setting) {
+    commit('UPDATE_SETTING', setting)
   },
-  storeUpdateClient ({dispatch}, client) {
-    dispatch('UPDATE_CLIENT_ID', client.client_id)
-    dispatch('UPDATE_CLIENT_FAVORITE', client.favorite)
+  storeUpdateClient ({commit}, client) {
+    commit('UPDATE_CLIENT_ID', client.client_id)
+    commit('UPDATE_CLIENT_FAVORITE', client.favorite)
   }
 }

@@ -7,6 +7,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -48,6 +49,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
+    // new ExtractTextPlugin('cache.manifest')
   ]
 })
 

@@ -3,6 +3,7 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
+import actions from './actions'
 
 Vue.use(Vuex)
 
@@ -64,5 +65,21 @@ const mutations = {
 
 export default new Vuex.Store({
   state,
-  mutations
+  mutations,
+  actions,
+  getters: {
+    loginStatus: state => state.loginStatus,
+    route: state => state.route,
+    routerLoading: state => state.routerLoading,
+    direction: state => state.direction,
+    setting: state => state.setting,
+    clientId: state => state.clientId,
+    isLoading: state => state.isLoading,
+    user: state => state.user,
+    hasVplusUser: state => !!state.user.id,
+    favoriteCount: state => state.clientFavorite.length,
+    newSongs: state => state.songList.filter(song => song.recent * 1),
+
+    announcements: state => state.announcements
+  }
 })

@@ -1,18 +1,19 @@
 import Vue from 'vue'
-import VueTouch from 'vue-touch'
+// import VueTouch from 'vue-touch'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import iNoBounce from 'inobounce'
 import iPadApp from './iPadApp'
 import App from './App'
 import {getItem} from './helpers/storage'
+import vuexStore from './vuex/store'
 
 iNoBounce.enable()
 
 const FastClick = require('fastclick')
 FastClick.attach(document.body)
 
-Vue.use(VueTouch)
+// Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.http.options.emulateJSON = true
@@ -87,8 +88,15 @@ if (window.navigator.standalone === true) {
   router.replace('/')
 }
 
-// eslint-disable-next-line no-undef
-router.start((isWebApp() && iPad) ? iPadApp : App, '#app')
+window.app = new Vue({
+  el: '#app',
+  router,
+  store: vuexStore,
+  render (h) {
+    // eslint-disable-next-line no-undef
+    return h((isWebApp() && iPad) ? iPadApp : App)
+  }
+})
 
-var cnzzProtocol = ((document.location.protocol === 'https:') ? ' https://' : ' http://')
+const cnzzProtocol = ((document.location.protocol === 'https:') ? ' https://' : ' http://')
 document.write(unescape('%3Cspan id=\'cnzz_stat_icon_1260437888\'%3E%3C/span%3E%3Cscript src="' + cnzzProtocol + 's4.cnzz.com/z_stat.php%3Fid%3D1260437888" type="text/javascript"%3E%3C/script%3E'))
