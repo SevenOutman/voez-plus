@@ -80,6 +80,10 @@ export default new Vuex.Store({
     favoriteCount: state => state.clientFavorite.length,
     newSongs: state => state.songList.filter(song => song.recent * 1),
 
-    announcements: state => state.announcements
+    announcements: state => state.announcements,
+
+    list: state => state.songList,
+    favoriteSongs: state => state.clientFavorite.map(id => state.songMap[id]),
+    songMap: state => state.songMap
   }
 })

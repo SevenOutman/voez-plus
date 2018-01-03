@@ -49,7 +49,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
-    // new ExtractTextPlugin('cache.manifest')
+    new ExtractTextPlugin('cache.manifest')
   ]
 })
 

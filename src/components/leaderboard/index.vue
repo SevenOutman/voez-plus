@@ -8,30 +8,31 @@
       <div class="vplus-leaderboard-song-cover-box" v-show="selfTop && cover.blur" transition="fade">
         <blur :blur-amount="5" :url="coverSrc" :height="cover.height">
           <div style="width: 100%; height: 100%" v-if="selfTop">
-            <div
-              class="vplus-leaderboard-self"
-              v-if="selfTop.rank !== undefined"
-              transition="fade"
-            >
-              <template v-if="selfTop.rank > 0">
-                <p>{{ selfTop.name }}</p>
-                <p>Score: {{ selfTop.score }}</p>
-                <p>Rank: {{ selfTop.rank }}</p>
-              </template>
-              <p v-else>没有记录</p>
-            </div>
-            <div class="vplus-leaderboard-self-notes" v-if="selfTop.notes" transition="fade">
-              <div class="vplus-leaderboard-self-note-square mp">{{ selfTop.notes.mp }}</div>
-              <div class="vplus-leaderboard-self-note-square perfect">{{ selfTop.notes.perfect }}</div>
-              <div class="vplus-leaderboard-self-note-square combo">{{ selfTop.notes.combo }}</div>
-              <div class="vplus-leaderboard-self-note-square ok">{{ selfTop.notes.ok }}</div>
-              <div class="vplus-leaderboard-self-note-square miss">{{ selfTop.notes.miss }}</div>
-              <div class="vplus-leaderboard-self-grade" :class="{ ap: selfTop.ap, fc: selfTop.fc }"
-                   v-if="selfTop.notes">
-                {{ selfGrade }}
-                <div class="vplus-leaderboard-self-grade-bg"></div>
+            <transition name="fade">
+              <div
+                class="vplus-leaderboard-self"
+                v-if="selfTop.rank !== undefined"
+              >
+                <template v-if="selfTop.rank > 0">
+                  <p>{{ selfTop.name }}</p>
+                  <p>Score: {{ selfTop.score }}</p>
+                  <p>Rank: {{ selfTop.rank }}</p>
+                </template>
+                <p v-else>没有记录</p>
               </div>
-            </div>
+              <div class="vplus-leaderboard-self-notes" v-if="selfTop.notes" transition="fade">
+                <div class="vplus-leaderboard-self-note-square mp">{{ selfTop.notes.mp }}</div>
+                <div class="vplus-leaderboard-self-note-square perfect">{{ selfTop.notes.perfect }}</div>
+                <div class="vplus-leaderboard-self-note-square combo">{{ selfTop.notes.combo }}</div>
+                <div class="vplus-leaderboard-self-note-square ok">{{ selfTop.notes.ok }}</div>
+                <div class="vplus-leaderboard-self-note-square miss">{{ selfTop.notes.miss }}</div>
+                <div class="vplus-leaderboard-self-grade" :class="{ ap: selfTop.ap, fc: selfTop.fc }"
+                     v-if="selfTop.notes">
+                  {{ selfGrade }}
+                  <div class="vplus-leaderboard-self-grade-bg"></div>
+                </div>
+              </div>
+            </transition>
           </div>
         </blur>
       </div>
@@ -39,13 +40,13 @@
     </div>
     <sticky>
       <tab :active-color="modeColor">
-        <tab-item :selected="selectedMode == 'easy'" @click="selectedMode = 'easy'">Easy {{ song.level_easy }}
+        <tab-item :selected="selectedMode === 'easy'" @click="selectedMode = 'easy'">Easy {{ song.level_easy }}
           <spinner type="dots" v-show="!tops.easy"></spinner>
         </tab-item>
-        <tab-item :selected="selectedMode == 'hard'" @click="selectedMode = 'hard'">Hard {{ song.level_hard }}
+        <tab-item :selected="selectedMode === 'hard'" @click="selectedMode = 'hard'">Hard {{ song.level_hard }}
           <spinner type="dots" v-show="!tops.hard"></spinner>
         </tab-item>
-        <tab-item :selected="selectedMode == 'special'" @click="selectedMode = 'special'">Special {{
+        <tab-item :selected="selectedMode === 'special'" @click="selectedMode = 'special'">Special {{
           song.level_special }}
           <spinner type="dots" v-show="!tops.special"></spinner>
         </tab-item>
@@ -55,29 +56,20 @@
       <divider v-show="!leaderboard.length" style="margin-top: 15px">暂无记录</divider>
       <group :title="song.name" v-show="leaderboard.length > 0">
         <leaderboard-item
+          v-for="(player, index) of leaderboard"
+          :key="index"
           :item="player"
-          :rank="$index + 1"
-          :is-self="selfTop && selfTop.rank == $index + 1"
-          v-for="player of leaderboard"
-          key="$index"
-        ></leaderboard-item>
+          :is-self="selfTop && selfTop.rank === index + 1"
+          :rank="index + 1"
+        />
       </group>
     </template>
   </div>
 </template>
 <script>
-  import Sticky from 'vux/src/components/sticky/index.vue'
-  import Tab from 'vux/src/components/tab/tab.vue'
-  import TabItem from 'vux/src/components/tab/tab-item.vue'
-
-  import Blur from 'vux/src/components/blur/index.vue'
-
-  import Group from 'vux/src/components/group/index.vue'
-  import Cell from 'vux/src/components/cell/index.vue'
-  import Spinner from 'vux/src/components/spinner/index.vue'
-
+  import {mapGetters} from 'vuex'
+  import {Sticky, Tab, TabItem, Blur, Group, Cell, Spinner, Divider} from 'vux'
   import LeaderboardItem from './leaderboard-item.vue'
-  import Divider from 'vux/src/components/divider/index.vue'
   import {axios} from '../../helpers/request'
 
   const MODES = ['easy', 'hard', 'special']
@@ -98,7 +90,6 @@
     },
     data () {
       return {
-        songId: '',
         selectedMode: 'special',
         tops: {
           easy: null,
@@ -118,6 +109,12 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'songMap'
+      ]),
+      songId () {
+        return +this.$route.params.songId
+      },
       song () {
         return this.songMap[this.songId] || {}
       },
@@ -180,34 +177,32 @@
         return number + ' ' + after
       }
     },
-    vuex: {
-      getters: {
-        songMap: state => state.songMap
-      }
+    beforeRouteEnter (_, __, next) {
+      next(vm => {
+        document.title = vm.song.name
+      })
     },
-    route: {
-      data (transition) {
-        let songId = transition.to.params.songId
+    afterRouteEnter (to, from, next) {
+      let songId = to.params.songId
 
-        MODES.forEach(mode => {
-          axios(`voez/leaderboard/${songId}/${mode}`).then(({data}) => {
-            let res = data
-            if (res.result && res.code === 0) {
-              this.tops[mode] = res.info.leaderboard
-              if (res.info.self && res.info.self.score > 0) {
-                let selfOnBoard = res.info.leaderboard.filter(player => player.name === res.info.self.name && player.score === res.info.self.score)
-                if (selfOnBoard.length) {
-                  res.info.self.rank = res.info.leaderboard.indexOf(selfOnBoard[0]) + 1
-                }
+      MODES.forEach(mode => {
+        axios(`voez/leaderboard/${songId}/${mode}`).then(({data}) => {
+          let res = data
+          if (res.result && res.code === 0) {
+            const vm = this
+            // next(vm => {
+            vm.tops[mode] = res.info.leaderboard
+            if (res.info.self && res.info.self.score > 0) {
+              let selfOnBoard = res.info.leaderboard.filter(player => player.name === res.info.self.name && player.score === res.info.self.score)
+              if (selfOnBoard.length) {
+                res.info.self.rank = res.info.leaderboard.indexOf(selfOnBoard[0]) + 1
               }
-              this.self[mode] = res.info.self
             }
-          })
+            vm.self[mode] = res.info.self
+            // })
+          }
         })
-        transition.next({
-          songId: songId
-        })
-      }
+      })
     }
   }
 </script>

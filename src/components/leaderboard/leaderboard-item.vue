@@ -7,8 +7,14 @@
   >
     <span slot="icon">{{ rank }}</span>
 
-    <span :class="{ fc: item.fc, ap: item.ap }" v-show="displayMode == 'score'"
-          slot="value">{{ item.score }}</span>
+    <span :class="{ fc: item.fc, ap: item.ap, amp: item.score >= 1000000 }" v-show="displayMode == 'score'">
+      <span
+        v-for="digit of scoreDigits"
+        class="vplus-leaderboard-item-score-digit"
+      >
+        {{ digit }}
+      </span>
+    </span>
 
     <div class="vplus-leaderboard-notes" :class="{ expanded: displayMode == 'notes' }" v-if="!!item.notes"
          slot="child">
@@ -22,7 +28,7 @@
   </cell>
 </template>
 <script>
-  import Cell from 'vux/src/components/cell/index.vue'
+  import {Cell} from 'vux'
 
   export default {
     components: {
@@ -50,6 +56,12 @@
           return this.item.score + ''
         }
         return ''
+      },
+      scoreDigits () {
+        if (this.item.score >= 1000000) {
+          return [1, 0, 0, 0, 0, 0, 0]
+        }
+        return [0, ...`${this.item.score}`.split('')]
       }
     },
     methods: {
@@ -64,6 +76,7 @@
   }
 </script>
 <style lang="less" rel="stylesheet/less">
+  @import "../../less/common";
   .vplus-leaderboard-item {
     &.self {
       .weui_cell_hd, .weui_cell_bd p, .weui_cell_ft {
@@ -86,13 +99,19 @@
       display: inline-block;
     }
 
-    .ap::before {
+    .ap:not(.amp)::before {
       background-color: #F8B427;
+    }
+
+    .amp::before {
+      box-shadow: inset 3.2px 0 1.28px 0px rgba(255, 0, 0, 0.35), inset -3.2px 0 1.28px 0px rgba(235, 255, 0, 0.64), inset 0 3.2px 1.28px 0px rgba(0, 133, 255, 0.43), inset 0 -3.2px 1.28px 0px rgba(253, 127, 11, 0.54);
+      background-color: #fff;
     }
 
     .weui_cell_hd {
       width: 2em;
       color: #6869a1;
+      .font-voez;
     }
     .weui_cell_bd {
       p {
@@ -101,6 +120,12 @@
     }
     .weui_cell_ft {
       color: #6869a1;
+    }
+    .vplus-leaderboard-item-score-digit {
+      .font-voez;
+      text-align: center;
+      display: inline-block;
+      width: 1ch;
     }
 
     .vplus-leaderboard-notes {

@@ -14,35 +14,36 @@
              cancel-text="取消" @on-confirm="$router.go('my')">
       <p>进入『我的 VOEZ+』将导致您正在游玩的《兰空VOEZ》下线。</p>
     </confirm>
-    <dialog class="vplus-welcome-dialog" :scroll="false" :show="showWelcomeDialog">
-      <p>欢迎使用 VOEZ+</p>
-      <div class="img-box">
-        <img src="http://voez.sevenoutman.com/assets/azami.jpg" alt="薊">
-      </div>
-      <div class="vplus-welcome-dialog-content">
-        <p>好久不见，我是薊。</p>
-        <p>欢迎来玩。记得阅读『关于』。</p>
-        <p>&nbsp;</p>
-        <p>薊 2016.9</p>
-      </div>
-      <span class="vux-close" style="margin: 8px auto" @click="showWelcomeDialog = false"></span>
-    </dialog>
-    <announcement></announcement>
+    <div v-transfer-dom>
+      <x-dialog class="vplus-welcome-dialog" :show="showWelcomeDialog">
+        <p>欢迎使用 VOEZ+</p>
+        <div class="img-box">
+          <img src="http://voez.sevenoutman.com/assets/azami.jpg" alt="薊">
+        </div>
+        <div class="vplus-welcome-dialog-content">
+          <p>好久不见，我是薊。</p>
+          <p>欢迎来玩。记得阅读『关于』。</p>
+          <p>&nbsp;</p>
+          <p>薊 2016.9</p>
+        </div>
+        <span class="vux-close" style="margin: 8px auto" @click="showWelcomeDialog = false"></span>
+      </x-dialog>
+    </div>
+    <announcement/>
     <group>
       <cell title="实时歌曲排行榜" link="/songs">
         <span slot="after-title" class="vux-reddot-s" v-if="hasNewSong"></span>
-        <span slot="value" v-if="hasNewSong">有新歌</span>
+        <span v-if="hasNewSong">有新歌</span>
       </cell>
       <cell title="关注歌曲" link="/favorite">{{ favoriteCount }}首</cell>
-      <cell title="我的 VOEZ+" :value="user.name || '邀请测试中'" is-link @click="goMy">
-      </cell>
+      <cell title="我的 VOEZ+" :value="user.name || '邀请测试中'" is-link @click="goMy"/>
     </group>
     <group>
       <cell title="关于" link="/about">
         <span slot="after-title" class="vux-reddot-s" v-if="hasNewAbout"></span>
-        <span slot="value" v-if="hasNewAbout">有更新</span>
+        <span v-if="hasNewAbout">有更新</span>
       </cell>
-      <cell title="和薊合影" is-link @click="showWelcomeDialog = true"></cell>
+      <cell title="和薊合影" is-link @click.prevent="showWelcomeDialog = true"/>
       <cell title="添加到主屏幕" v-if="!isWebApp">
         <span slot="after-title" class="vux-reddot-s" v-if="isIOS"></span>
         <div slot="value">
@@ -50,8 +51,7 @@
           <template v-else>
             <span v-if="!isSafari" style="color: green">在 Safari 中打开</span>
             <span v-else style="display: inline-block; color: green">
-                            点击{{ isIPad ? '右上' : '下' }}方的
-              <?xml version="1.0" standalone="no"?>
+              点击{{ isIPad ? '右上' : '下' }}方的
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
@@ -79,14 +79,17 @@
   import {mapGetters} from 'vuex'
   import Announcement from './announcement/index.vue'
 
-  import {Group, Cell, XDialog as Dialog, Confirm} from 'vux'
+  import {Group, Cell, XDialog, Confirm, TransferDomDirective as TransferDom} from 'vux'
 
   export default {
+    directives: {
+      TransferDom
+    },
     components: {
       Announcement,
       Group,
       Cell,
-      Dialog,
+      XDialog,
       Confirm
     },
     data () {

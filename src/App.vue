@@ -1,31 +1,41 @@
 <template>
-  <div>
-    <loading :show="routerLoading" text="加载中"></loading>
-    <loading :show="loading.show" :text="loading.text"></loading>
+  <div id="app">
+    <loading :show="routerLoading" text="加载中"/>
+    <loading :show="loading.show" :text="loading.text"/>
     <toast :show.sync="toast.show" :type="toast.type">{{ toast.text }}</toast>
     <confirm :show.sync="confirm.show" title="提示" confirm-text="确定"
              cancel-text="取消" @on-confirm="confirm.onConfirm" @on-cancel="confirm.onCancel">
       <p>{{ confirm.text }}</p>
     </confirm>
-    <action-sheet
+    <actionsheet
       :menus="actionSheet.menus"
       :show-cancel="actionSheet.showCancel"
       cancel-text="取消"
       :show.sync="actionSheet.show"
-      ref="action-sheet"
-    ></action-sheet>
-    <view-box class="view-box" ref="view-box">
+      ref="actionSheet"
+    />
+    <view-box class="view-box" ref="viewBox" :body-padding-top="isWebApp ? '46px' : ''">
       <!--header slot-->
-      <div class="vux-demo-header-box" slot="header" v-if="isWebApp">
-        <x-header :left-options="leftOptions" :transition="headerTransition" :title="title"
-                  @on-click-title="scrollTop" @on-click-back="goBack"></x-header>
-      </div>
+      <!--<div class="vux-demo-header-box" >-->
+        <x-header
+          slot="header"
+          v-if="isWebApp"
+          :left-options="leftOptions"
+          :transition="headerTransition"
+          :title="title"
+          @on-click-title="scrollTop"
+          @on-click-back="goBack"
+        />
+      <!--</div>-->
       <!--default slot-->
-      <router-view
-        ref="router-view"
-        class="router-view"
-        :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')"
-      ></router-view>
+      <transition
+        :name="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')"
+      >
+        <router-view
+          ref="routerView"
+          class="router-view"
+        />
+      </transition>
     </view-box>
   </div>
 </template>
@@ -34,9 +44,9 @@
 
   import {mapActions, mapGetters} from 'vuex'
   import {axios} from './helpers/request'
-  import {Loading, Toast, Confirm, Actionsheet as ActionSheet, ViewBox} from 'vux'
+  import {Loading, Toast, Confirm, Actionsheet, ViewBox, XHeader} from 'vux'
 
-  import XHeader from './components/common/x-header.vue'
+  // import XHeader from './components/common/x-header.vue'
 
   import noop from './helpers/noop'
   import {getItem} from './helpers/storage'
@@ -46,7 +56,7 @@
       Loading,
       Toast,
       Confirm,
-      ActionSheet,
+      Actionsheet,
       ViewBox,
       XHeader
     },
@@ -90,11 +100,11 @@
         return this.direction === 'forward' ? 'vux-header-fade-in-right' : 'vux-header-fade-in-left'
       },
       title () {
-        if (this.$route.title) {
-          if (this.$route.title instanceof Function) {
-            return this.$route.title(this.$refs.routerView)
+        if (this.$route.meta.title) {
+          if (this.$route.meta.title instanceof Function) {
+            return 'VOEZ+'
           }
-          return this.$route.title
+          return this.$route.meta.title
         }
         return 'VOEZ+'
       },
@@ -381,7 +391,7 @@
 
   .view-box {
     transform: translate3d(0, 0, 0);
-    .vux-demo-header-box {
+    .vux-header {
       z-index: 100;
       position: absolute;
       width: 100%;
@@ -409,75 +419,30 @@
   /**
   * vue-router transition
   */
-  .vux-pop-out-transition,
-  .vux-pop-in-transition {
-    width: 100%;
-    animation-duration: 0.5s;
-    animation-fill-mode: both;
-    backface-visibility: hidden;
-  }
-
-  .vux-pop-out-enter,
-  .vux-pop-out-leave,
-  .vux-pop-in-enter,
-  .vux-pop-in-leave {
+  .vux-pop-out-enter-active,
+  .vux-pop-out-leave-active,
+  .vux-pop-in-enter-active,
+  .vux-pop-in-leave-active {
     will-change: transform;
-    height: 100%;
+    transition: all 500ms;
     position: absolute;
-    left: 0;
+    width: 100%;
+    perspective: 1000;
   }
-
   .vux-pop-out-enter {
-    animation-name: popInLeft;
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
   }
-
-  .vux-pop-out-leave {
-    z-index: 1;
-    animation-name: popOutRight;
+  .vux-pop-out-leave-active {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
   }
-
   .vux-pop-in-enter {
-    z-index: 1;
-    animation-name: popInRight;
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
   }
-
-  .vux-pop-in-leave {
-    animation-name: popOutLeft;
-  }
-
-  @keyframes popInLeft {
-    from {
-      transform: translate3d(-30%, 0, 0);
-    }
-    to {
-      transform: translate3d(0, 0, 0);
-    }
-  }
-
-  @keyframes popOutLeft {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(-30%, 0, 0);
-    }
-  }
-
-  @keyframes popInRight {
-    from {
-      transform: translate3d(100%, 0, 0);
-    }
-    to {
-      transform: translate3d(0, 0, 0);
-    }
-  }
-
-  @keyframes popOutRight {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(100%, 0, 0);
-    }
+  .vux-pop-in-leave-active {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
   }
 </style>
