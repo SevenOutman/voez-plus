@@ -3,6 +3,10 @@ import VueTouch from 'vue-touch'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import iNoBounce from 'inobounce'
+import iPadApp from './iPadApp'
+import App from './App'
+import {getItem} from './helpers/storage'
+
 iNoBounce.enable()
 
 const FastClick = require('fastclick')
@@ -15,8 +19,8 @@ Vue.http.options.emulateJSON = true
 Vue.http.options.root = /voez/.test(location.host) ? location.protocol + '//' + location.host : 'http://voez.sevenoutman.com'
 
 function isLocalStorageSupported () {
-  var testKey = 'test',
-    storage = window.sessionStorage
+  let testKey = 'test'
+  let storage = window.sessionStorage
   try {
     storage.setItem(testKey, 'testValue')
     storage.removeItem(testKey)
@@ -57,6 +61,7 @@ const iPad = /ipad/.test(window.navigator.userAgent.toLocaleLowerCase())
 const pro = iPad && document.body.clientWidth >= 1024 && document.body.clientHeight >= 1024
 
 let router
+// eslint-disable-next-line no-undef
 if (isWebApp() && iPad) {
   console.log('iPad WebApp')
   router = require('./helpers/router-ipad').default
@@ -81,11 +86,9 @@ if (window.navigator.standalone === true) {
 } else {
   router.replace('/')
 }
-import iPadApp from './iPadApp'
-import App from './App'
-import {getItem} from './helpers/storage'
 
+// eslint-disable-next-line no-undef
 router.start((isWebApp() && iPad) ? iPadApp : App, '#app')
 
-var cnzz_protocol = (('https:' == document.location.protocol) ? ' https://' : ' http://')
-document.write(unescape('%3Cspan id=\'cnzz_stat_icon_1260437888\'%3E%3C/span%3E%3Cscript src="' + cnzz_protocol + 's4.cnzz.com/z_stat.php%3Fid%3D1260437888" type="text/javascript"%3E%3C/script%3E'))
+var cnzzProtocol = ((document.location.protocol === 'https:') ? ' https://' : ' http://')
+document.write(unescape('%3Cspan id=\'cnzz_stat_icon_1260437888\'%3E%3C/span%3E%3Cscript src="' + cnzzProtocol + 's4.cnzz.com/z_stat.php%3Fid%3D1260437888" type="text/javascript"%3E%3C/script%3E'))

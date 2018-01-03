@@ -8,7 +8,11 @@
       <div class="vplus-leaderboard-song-cover-box" v-show="selfTop && cover.blur" transition="fade">
         <blur :blur-amount="5" :url="coverSrc" :height="cover.height">
           <div style="width: 100%; height: 100%" v-if="selfTop">
-            <div class="vplus-leaderboard-self" v-if="selfTop.rank !== undefined" transition="fade">
+            <div
+              class="vplus-leaderboard-self"
+              v-if="selfTop.rank !== undefined"
+              transition="fade"
+            >
               <template v-if="selfTop.rank > 0">
                 <p>{{ selfTop.name }}</p>
                 <p>Score: {{ selfTop.score }}</p>
@@ -50,8 +54,13 @@
     <template v-if="leaderboard">
       <divider v-show="!leaderboard.length" style="margin-top: 15px">暂无记录</divider>
       <group :title="song.name" v-show="leaderboard.length > 0">
-        <leaderboard-item :item="player" :rank="$index + 1" :is-self="selfTop && selfTop.rank == $index + 1"
-                          v-for="player of leaderboard"></leaderboard-item>
+        <leaderboard-item
+          :item="player"
+          :rank="$index + 1"
+          :is-self="selfTop && selfTop.rank == $index + 1"
+          v-for="player of leaderboard"
+          key="$index"
+        ></leaderboard-item>
       </group>
     </template>
   </div>
@@ -119,13 +128,13 @@
         return 'http://voez.sevenoutman.com/voez/cover/' + this.songId + '/750'
       },
       modeColor () {
-        if (this.selectedMode == 'special') {
+        if (this.selectedMode === 'special') {
           return '#F09412'
         }
-        if (this.selectedMode == 'hard') {
+        if (this.selectedMode === 'hard') {
           return '#E13841'
         }
-        if (this.selectedMode == 'easy') {
+        if (this.selectedMode === 'easy') {
           return '#169CBF'
         }
         return '#04be02'
@@ -186,7 +195,7 @@
             if (res.result && res.code === 0) {
               this.tops[mode] = res.info.leaderboard
               if (res.info.self && res.info.self.score > 0) {
-                let selfOnBoard = res.info.leaderboard.filter(player => player.name == res.info.self.name && player.score == res.info.self.score)
+                let selfOnBoard = res.info.leaderboard.filter(player => player.name === res.info.self.name && player.score === res.info.self.score)
                 if (selfOnBoard.length) {
                   res.info.self.rank = res.info.leaderboard.indexOf(selfOnBoard[0]) + 1
                 }

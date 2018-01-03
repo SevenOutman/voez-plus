@@ -23,6 +23,8 @@
   </div>
 </template>
 <script type="text/babel">
+  /* eslint-disable no-undef */
+
   import {axios} from './helpers/request'
   import vuexStore from './vuex/store'
   import vuexActions from './vuex/actions'
@@ -34,7 +36,6 @@
   import XHeader from './components/common/x-header.vue'
   import ViewBox from 'vux/src/components/view-box/index.vue'
 
-  import {getRouteIndex} from './helpers/route-utils'
   import noop from './helpers/noop'
   import {getItem} from './helpers/storage'
 
@@ -111,21 +112,21 @@
           let startup = document.querySelector('.startup')
 
           // Browser environment sniffing
-          var inBrowser = typeof window !== 'undefined' && Object.prototype.toString.call(window) !== '[object Object]'
-          var UA = inBrowser && window.navigator.userAgent.toLowerCase()
-          var isIE9 = UA && UA.indexOf('msie 9.0') > 0
-          var transitionProp = undefined
-          var transitionEndEvent = undefined
-          var animationProp = undefined
-          var animationEndEvent = undefined
+          let inBrowser = typeof window !== 'undefined' && Object.prototype.toString.call(window) !== '[object Object]'
+          let UA = inBrowser && window.navigator.userAgent.toLowerCase()
+          let isIE9 = UA && UA.indexOf('msie 9.0') > 0
+          // let transitionProp
+          // let transitionEndEvent
+          // let animationProp
+          let animationEndEvent
 
           // Transition property/event sniffing
           if (inBrowser && !isIE9) {
-            var isWebkitTrans = window.ontransitionend === undefined && window.onwebkittransitionend !== undefined
-            var isWebkitAnim = window.onanimationend === undefined && window.onwebkitanimationend !== undefined
-            transitionProp = isWebkitTrans ? 'WebkitTransition' : 'transition'
-            transitionEndEvent = isWebkitTrans ? 'webkitTransitionEnd' : 'transitionend'
-            animationProp = isWebkitAnim ? 'WebkitAnimation' : 'animation'
+            // let isWebkitTrans = window.ontransitionend === undefined && window.onwebkittransitionend !== undefined
+            let isWebkitAnim = window.onanimationend === undefined && window.onwebkitanimationend !== undefined
+            // transitionProp = isWebkitTrans ? 'WebkitTransition' : 'transition'
+            // transitionEndEvent = isWebkitTrans ? 'webkitTransitionEnd' : 'transitionend'
+            // animationProp = isWebkitAnim ? 'WebkitAnimation' : 'animation'
             animationEndEvent = isWebkitAnim ? 'webkitAnimationEnd' : 'animationend'
           }
 
@@ -143,7 +144,7 @@
           if (this.route.path === '/') {
             let lastvisit = localStorage.getItem('lastvisit') * 1 || 0
             if (!lastvisit) {
-              let lastvisit = localStorage.setItem('lastvisit', Date.now())
+              localStorage.setItem('lastvisit', Date.now())
 
               setTimeout(() => {
                 this.$broadcast('sys:dialog.welcome')
@@ -161,7 +162,7 @@
             'auth_token': authToken
           }).then(response => {
             let res = JSON.parse(response.body)
-            if (res.result && res.code == 0) {
+            if (res.result && res.code === 0) {
               if (res.info.auth_name && res.info.auth_token) {
                 localStorage.setItem('auth_name', res.info.auth_name)
                 localStorage.setItem('auth_token', res.info.auth_token)
@@ -237,7 +238,6 @@
         this.confirm.onConfirm = options.onConfirm || noop
         this.confirm.onCancel = options.onCancel || noop
         this.confirm.show = true
-
       }
     },
     watch: {
@@ -256,7 +256,7 @@
         client_id: this.clientId
       }).then(({data}) => {
         let res = data
-        if (res.result && res.code === -0) {
+        if (res.result && res.code === 0) {
           this.storeUpdateClient(res.info.client)
         }
       })
@@ -274,7 +274,7 @@
           this.storeUpdateAnnouncements(res.info.announcement)
           this.hideStartupView()
         }
-      }).catch(err => {
+      }).catch(() => {
         alert('VOEZ+ 遇到问题正在维护，请稍后再试')
       })
       this.autoLogin(() => {
@@ -311,7 +311,7 @@
       const TRIGGER_DISTANCE = 50
       const TRIGGER_VELOCITY = 150
       const ifSwipeRight = e => {
-        if (e.changedTouches.length == 1 && touchStart) {
+        if (e.changedTouches.length === 1 && touchStart) {
           let touch = e.changedTouches[0]
           let deltaX = touch.pageX - touchStart.x
           if (deltaX > TRIGGER_DISTANCE) {
@@ -329,7 +329,7 @@
         }
       }
       document.addEventListener('touchstart', e => {
-        if (e.touches.length == 1) {
+        if (e.touches.length === 1) {
           let touch = e.touches[0]
           touchStart = {
             x: touch.pageX,
@@ -343,7 +343,7 @@
   }
 </script>
 <style lang="less" rel="stylesheet/less">
-  @import '~vux/src/styles/reset';
+  @import '~vux/src/styles/reset.less';
 
   html, body {
     width: 100%;

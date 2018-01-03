@@ -1,41 +1,38 @@
-import { setCookie, getCookie } from './cookie';
+import {setCookie, getCookie} from './cookie'
 
-const useStorage = !!window.localStorage;
+const useStorage = !!window.localStorage
 
-export function setItem(key, value, type = 'session') {
-
+export function setItem (key, value, type = 'session') {
   if (useStorage) {
-    return window[`${type}Storage`].setItem(key, value);
+    return window[`${type}Storage`].setItem(key, value)
   }
 
   return setCookie(key, value, {
     expires: new Date(new Date().getTime() + (365 * 24 * 60 * 60 * 1000)),
     path: '/'
-  });
+  })
 }
 
-export function getItem(key, type = 'session') {
+export function getItem (key, type = 'session') {
   if (useStorage) {
-    return window[`${type}Storage`].getItem(key);
+    return window[`${type}Storage`].getItem(key)
   }
-  return getCookie(key);
+  return getCookie(key)
 }
 
-
-export function setItemByUid(key, value, uid) {
-  setItem(`_.${uid}.${key}`, value);
+export function setItemByUid (key, value, uid) {
+  setItem(`_.${uid}.${key}`, value)
 }
 
-export function getItemByUid(key) {
-
-  const uid = getItem('uid');
+export function getItemByUid (key) {
+  const uid = getItem('uid')
   if (uid) {
-    return getItem(`_.${uid}.${key}`);
+    return getItem(`_.${uid}.${key}`)
   }
-  return getItem(key);
+  return getItem(key)
 }
 
 export default {
   setItem,
   getItem
-};
+}
