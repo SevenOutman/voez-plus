@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="307a6bdb-fc67-4740-a44f-812ee90abaa0" name="Moguhost" url="http://moguhost.sevenoutman.com">
+        <fileTransfer host="moguhost.sevenoutman.com" port="22" rootFolder="/srv/www/voez" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -13,7 +13,9 @@
     </div>
 </template>
 <script>
-    import Swiper from '../../../bower_components/Swiper/dist/js/swiper.min'
+    // import Swiper from '../../../bower_components/Swiper/dist/js/swiper.min'
+    import Swiper from 'swiper'
+
     export default {
         data() {
             return {
@@ -65,7 +67,7 @@
     }
 </script>
 <style lang="less" rel="stylesheet/less">
-    @import '../../../bower_components/Swiper/dist/css/swiper.min.css';
+    @import '../../../node_modules/swiper/dist/css/swiper.min.css';
 
     .voez-announcement {
 

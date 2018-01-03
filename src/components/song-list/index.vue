@@ -63,6 +63,8 @@
 <style lang="less" rel="stylesheet/less">
     .voez-song-list {
         -webkit-transform-style: preserve-3d;
+        padding-bottom: env(safe-area-inset-bottom);
+
         .weui_cell {
             -webkit-transform: translate3d(0, 0, 0);
             -webkit-backface-visibility: hidden;

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="format-detection" content="telephone=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,9 +28,32 @@
     <link rel="apple-touch-startup-image" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)"
           href="/assets/startup.png"/>
     <style>
+      /* iPhone X */
+      @media only screen
+      and (device-width : 375px)
+      and (device-height : 812px)
+      and (-webkit-device-pixel-ratio : 3)
+      and (orientation : portrait) {
+        html {
+          height: 812px !important;
+          width: 375px !important;
+        }
+      }
+
+      @media only screen
+      and (device-width : 375px)
+      and (device-height : 812px)
+      and (-webkit-device-pixel-ratio : 3)
+      and (orientation : landscape) {
+        html {
+          width: 812px !important;
+          height: 375px !important;
+        }
+      }
         .with-statusbar-overlay body {
             padding-top: 20px;
-            box-sizing: border-box
+            padding-top: env(safe-area-inset-top);
+            box-sizing: border-box;
         }
 
         .with-statusbar-overlay .statusbar-overlay {
@@ -44,6 +67,7 @@
             left: 0;
             top: 0;
             height: 20px;
+            height: env(safe-area-inset-top);
             width: 100%;
             display: none;
             -webkit-transition-duration: .4s;
@@ -121,7 +145,6 @@
     <script>
 
         function isWebApp() {
-//            return true
             return !!window.navigator.standalone
         }
         window.startTime = Date.now()
