@@ -41,7 +41,10 @@
                     autoplay:    3000,
                     grabCursor:  true,
                     loop:        this.list.length > 1,
-                    pagination:  '.swiper-pagination',
+                    pagination:  {
+                      el: '.swiper-pagination',
+                      type: 'bullets'
+                    },
                     lazyLoading: true
                 });
             },
