@@ -7,7 +7,7 @@
   >
     <span slot="icon">{{ rank }}</span>
 
-    <span :class="{ fc: item.fc, ap: item.ap, amp: item.score >= 1000000 }" v-show="displayMode == 'score'">
+    <span :class="{ fc: item.fc, ap: item.ap, amp: item.score >= 1000000 }" v-show="displayMode === 'score'">
       <span
         v-for="digit of scoreDigits"
         class="vplus-leaderboard-item-score-digit"
@@ -16,7 +16,7 @@
       </span>
     </span>
 
-    <div class="vplus-leaderboard-notes" :class="{ expanded: displayMode == 'notes' }" v-if="!!item.notes"
+    <div class="vplus-leaderboard-notes" :class="{ expanded: displayMode === 'notes' }" v-if="!!item.notes"
          slot="child">
       <!--<span class="vplus-leaderboard-notes-mp">max perfect {{ item.notes.mp }}</span>-->
       <span class="vplus-leaderboard-notes-perfect">perfect <span>{{ item.notes.perfect }}</span></span>
@@ -78,8 +78,9 @@
 <style lang="less" rel="stylesheet/less">
   @import "../../less/common";
   .vplus-leaderboard-item {
+    .color-voez;
     &.self {
-      .weui_cell_hd, .weui_cell_bd p, .weui_cell_ft {
+      .weui-cell__hd, .weui-cell__bd p, .weui-cell__ft {
         color: #E13841;
       }
     }
@@ -108,17 +109,17 @@
       background-color: #fff;
     }
 
-    .weui_cell_hd {
+    .weui-cell__hd {
       width: 2em;
       color: #6869a1;
       .font-voez;
     }
-    .weui_cell_bd {
+    .weui-cell__bd {
       p {
         color: #6869a1;
       }
     }
-    .weui_cell_ft {
+    .weui-cell__ft {
       color: #6869a1;
     }
     .vplus-leaderboard-item-score-digit {

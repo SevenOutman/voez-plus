@@ -14,7 +14,7 @@
       :show.sync="actionSheet.show"
       ref="actionSheet"
     />
-    <view-box class="view-box" ref="viewBox" :body-padding-top="isWebApp ? '46px' : ''">
+    <view-box class="view-box" ref="viewBox" :body-padding-top="isWebApp ? '46px' : ''" body-padding-bottom="0">
       <!--header slot-->
       <!--<div class="vux-demo-header-box" >-->
         <x-header
@@ -414,6 +414,12 @@
       padding-top: 46px;
     }
 
+    #vux_view_box_body {
+      &> div {
+        min-height: 100%;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
   }
 
   /**
@@ -428,21 +434,34 @@
     position: absolute;
     width: 100%;
     perspective: 1000;
+    -wbekit-perspective: 1000;
+  }
+  .vux-pop-out-enter-active,
+  .vux-pop-in-leave-active {
+    z-index: 0;
+  }
+
+  .vux-pop-in-enter-active,
+  .vux-pop-out-leave-active {
+    z-index: 1;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, .1);
   }
   .vux-pop-out-enter {
-    opacity: 0;
+    /*opacity: 0;*/
     transform: translate3d(-100%, 0, 0);
   }
   .vux-pop-out-leave-active {
-    opacity: 0;
+    /*opacity: 0;*/
     transform: translate3d(100%, 0, 0);
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0);
   }
   .vux-pop-in-enter {
-    opacity: 0;
+    /*opacity: 0;*/
     transform: translate3d(100%, 0, 0);
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0);
   }
   .vux-pop-in-leave-active {
-    opacity: 0;
+    /*opacity: 0;*/
     transform: translate3d(-100%, 0, 0);
   }
 </style>

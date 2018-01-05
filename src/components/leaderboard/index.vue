@@ -40,13 +40,13 @@
     </div>
     <sticky>
       <tab :active-color="modeColor">
-        <tab-item :selected="selectedMode === 'easy'" @click="selectedMode = 'easy'">Easy {{ song.level_easy }}
+        <tab-item :selected="selectedMode === 'easy'" @on-item-click="selectedMode = 'easy'">Easy {{ song.level_easy }}
           <spinner type="dots" v-show="!tops.easy"></spinner>
         </tab-item>
-        <tab-item :selected="selectedMode === 'hard'" @click="selectedMode = 'hard'">Hard {{ song.level_hard }}
+        <tab-item :selected="selectedMode === 'hard'" @on-item-click="selectedMode = 'hard'">Hard {{ song.level_hard }}
           <spinner type="dots" v-show="!tops.hard"></spinner>
         </tab-item>
-        <tab-item :selected="selectedMode === 'special'" @click="selectedMode = 'special'">Special {{
+        <tab-item :selected="selectedMode === 'special'" @on-item-click="selectedMode = 'special'">Special {{
           song.level_special }}
           <spinner type="dots" v-show="!tops.special"></spinner>
         </tab-item>
@@ -169,37 +169,26 @@
         this.cover.blur = !this.cover.blur
       }
     },
-    filters: {
-      rightPad (number, after) {
-        if (number < 10) {
-          return number + '  ' + after
-        }
-        return number + ' ' + after
-      }
-    },
     beforeRouteEnter (_, __, next) {
       next(vm => {
         document.title = vm.song.name
       })
     },
-    afterRouteEnter (to, from, next) {
-      let songId = to.params.songId
+    mounted (to, from, next) {
+      let songId = this.$route.params.songId
 
       MODES.forEach(mode => {
         axios(`voez/leaderboard/${songId}/${mode}`).then(({data}) => {
           let res = data
           if (res.result && res.code === 0) {
-            const vm = this
-            // next(vm => {
-            vm.tops[mode] = res.info.leaderboard
+            this.tops[mode] = res.info.leaderboard
             if (res.info.self && res.info.self.score > 0) {
               let selfOnBoard = res.info.leaderboard.filter(player => player.name === res.info.self.name && player.score === res.info.self.score)
               if (selfOnBoard.length) {
                 res.info.self.rank = res.info.leaderboard.indexOf(selfOnBoard[0]) + 1
               }
             }
-            vm.self[mode] = res.info.self
-            // })
+            this.self[mode] = res.info.self
           }
         })
       })
@@ -207,6 +196,7 @@
   }
 </script>
 <style lang="less" rel="stylesheet/less">
+  @import "../../less/common";
   .voez-leaderboard {
     padding-bottom: env(safe-area-inset-bottom);
 
@@ -453,6 +443,9 @@
     }
     .vux-sticky {
       z-index: 100;
+      .vux-tab-item {
+        .font-voez;
+      }
     }
     .vux-tab-ink-bar-transition-forward {
       transition+_: right 0.3s cubic-bezier(0.35, 0, 0.25, 1), left 0.3s cubic-bezier(0.35, 0, 0.25, 1) 0.09s, background-color 300ms cubic-bezier(0.35, 0, 0.25, 1);
